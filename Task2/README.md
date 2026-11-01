@@ -92,7 +92,7 @@ Normal  SuccessfulRescale  New size: 5; reason: memory resource utilization (per
 
 ![HPA до нагрузки](part1-dashboard-before-2.png)
 
-Под нагрузкой:
+Под нагрузкой. Скриншоты сняты на четырёх репликах, пятую HPA добавил позже, это видно в логе:
 
 ![Поды под нагрузкой](part1-dashboard-pods.png)
 
@@ -110,7 +110,7 @@ Prometheus собирает метрику приложения:
 
 ![http_requests_total](part2-prometheus-metric.png)
 
-Нагрузка около 67 RPS без ошибок. Средний RPS на под дошёл до 31,9 при цели 10, HPA увеличил число реплик с 1 до 7, после чего на под приходилось около 9,5 RPS. Значения в логе в тысячных долях: `9530m` означает 9,53 RPS. Из [part2-hpa.log](part2-hpa.log):
+Нагрузка около 67 RPS без ошибок. Средний RPS на под дошёл до 31,9 при цели 10, HPA увеличил число реплик с 1 до 7, после чего в среднем на под приходилось около 9,5 RPS. Значения в логе в тысячных долях: `9530m` означает 9,53 RPS. Из [part2-hpa.log](part2-hpa.log):
 
 ```text
 21:19:37  0/10        replicas 1
@@ -134,6 +134,8 @@ Normal  SuccessfulRescale  New size: 7; reason: pods metric http_requests_per_se
 Под нагрузкой:
 
 ![Deployment под нагрузкой](part2-dashboard-after.png)
+
+RPS по подам в Prometheus. Время на графике в UTC: 18:19 UTC соответствует 21:19 по Москве в логе. Нагрузка по подам неравномерная: Locust держит keep-alive соединения, а Service распределяет соединения, а не запросы, поэтому новые поды получают только новые соединения. HPA считает средний RPS по всем подам, на масштабирование это не влияет. Так же неравномерно распределена память подов в части 1.
 
 ![RPS по подам в Prometheus](part2-prometheus-rps.png)
 
