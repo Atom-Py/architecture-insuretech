@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scaletestapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scaletestapp
+  template:
+    metadata:
+      labels:
+        app: scaletestapp
+      # Prometheus собирает метрики подов с этими аннотациями (часть 2)
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: /metrics
+    spec:
+      containers:
+        - name: scaletestapp
+          image: ghcr.io/yandex-practicum/scaletestapp:latest
+          ports:
+            - containerPort: 8080
+          # HPA считает утилизацию памяти от requests
+          resources:
+            requests:
+              memory: 10Mi
+            limits:
+              memory: 30Mi

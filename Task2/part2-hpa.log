@@ -1,0 +1,84 @@
+# kubectl get hpa scaletestapp, раз в 15 с
+TIME      NAME          REFERENCE                TARGETS    MINPODS  MAXPODS  REPLICAS  AGE
+21:19:22  scaletestapp  Deployment/scaletestapp  0/10       1        10       1         4m36s
+21:19:37  scaletestapp  Deployment/scaletestapp  0/10       1        10       1         4m51s
+21:19:52  scaletestapp  Deployment/scaletestapp  953m/10    1        10       1         5m7s
+21:20:08  scaletestapp  Deployment/scaletestapp  5003m/10   1        10       1         5m22s
+21:20:23  scaletestapp  Deployment/scaletestapp  12327m/10  1        10       1         5m37s
+21:20:38  scaletestapp  Deployment/scaletestapp  22605m/10  1        10       2         5m52s
+21:20:53  scaletestapp  Deployment/scaletestapp  31933m/10  1        10       3         6m7s
+21:21:08  scaletestapp  Deployment/scaletestapp  14655m/10  1        10       3         6m22s
+21:21:23  scaletestapp  Deployment/scaletestapp  17685m/10  1        10       5         6m38s
+21:21:39  scaletestapp  Deployment/scaletestapp  15142m/10  1        10       5         6m53s
+21:21:54  scaletestapp  Deployment/scaletestapp  13197m/10  1        10       7         7m8s
+21:22:09  scaletestapp  Deployment/scaletestapp  13373m/10  1        10       7         7m23s
+21:22:24  scaletestapp  Deployment/scaletestapp  9552m/10   1        10       7         7m38s
+21:22:39  scaletestapp  Deployment/scaletestapp  9539m/10   1        10       7         7m53s
+21:22:54  scaletestapp  Deployment/scaletestapp  9634m/10   1        10       7         8m9s
+21:23:10  scaletestapp  Deployment/scaletestapp  9530m/10   1        10       7         8m24s
+21:23:25  scaletestapp  Deployment/scaletestapp  9501m/10   1        10       7         8m39s
+21:23:40  scaletestapp  Deployment/scaletestapp  9457m/10   1        10       7         8m54s
+21:23:55  scaletestapp  Deployment/scaletestapp  9590m/10   1        10       7         9m9s
+21:24:10  scaletestapp  Deployment/scaletestapp  9549m/10   1        10       7         9m24s
+21:24:25  scaletestapp  Deployment/scaletestapp  9644m/10   1        10       7         9m40s
+21:24:41  scaletestapp  Deployment/scaletestapp  9603m/10   1        10       7         9m55s
+21:24:56  scaletestapp  Deployment/scaletestapp  9618m/10   1        10       7         10m
+21:25:11  scaletestapp  Deployment/scaletestapp  9542m/10   1        10       7         10m
+21:25:26  scaletestapp  Deployment/scaletestapp  9488m/10   1        10       7         10m
+21:25:41  scaletestapp  Deployment/scaletestapp  9387m/10   1        10       7         10m
+21:25:57  scaletestapp  Deployment/scaletestapp  9504m/10   1        10       7         11m
+21:26:12  scaletestapp  Deployment/scaletestapp  9555m/10   1        10       7         11m
+21:26:27  scaletestapp  Deployment/scaletestapp  9561m/10   1        10       7         11m
+21:26:42  scaletestapp  Deployment/scaletestapp  9444m/10   1        10       7         11m
+21:26:57  scaletestapp  Deployment/scaletestapp  7323m/10   1        10       7         12m
+21:27:12  scaletestapp  Deployment/scaletestapp  4209m/10   1        10       7         12m
+21:27:28  scaletestapp  Deployment/scaletestapp  1047m/10   1        10       7         12m
+21:27:43  scaletestapp  Deployment/scaletestapp  0/10       1        10       7         12m
+21:27:58  scaletestapp  Deployment/scaletestapp  0/10       1        10       7         13m
+21:28:13  scaletestapp  Deployment/scaletestapp  0/10       1        10       7         13m
+
+# kubectl get pods -l app=scaletestapp
+NAME                            READY   STATUS    RESTARTS   AGE
+scaletestapp-5d86bf49f5-2wc2x   1/1     Running   0          7m26s
+scaletestapp-5d86bf49f5-9m7t5   1/1     Running   0          7m56s
+scaletestapp-5d86bf49f5-gpfft   1/1     Running   0          18m
+scaletestapp-5d86bf49f5-hd9gs   1/1     Running   0          8m11s
+scaletestapp-5d86bf49f5-lxc4h   1/1     Running   0          6m56s
+scaletestapp-5d86bf49f5-v7h2d   1/1     Running   0          7m26s
+scaletestapp-5d86bf49f5-zjq64   1/1     Running   0          6m56s
+
+# kubectl top pod -l app=scaletestapp
+NAME                            CPU(cores)   MEMORY(bytes)   
+scaletestapp-5d86bf49f5-2wc2x   1m           12Mi            
+scaletestapp-5d86bf49f5-9m7t5   1m           14Mi            
+scaletestapp-5d86bf49f5-gpfft   1m           20Mi            
+scaletestapp-5d86bf49f5-hd9gs   1m           16Mi            
+scaletestapp-5d86bf49f5-lxc4h   1m           12Mi            
+scaletestapp-5d86bf49f5-v7h2d   1m           14Mi            
+scaletestapp-5d86bf49f5-zjq64   1m           14Mi            
+
+# kubectl describe hpa scaletestapp
+Name:                                  scaletestapp
+Namespace:                             default
+Labels:                                <none>
+Annotations:                           <none>
+CreationTimestamp:                     Sun, 01 Nov 2026 21:14:46 +0300
+Reference:                             Deployment/scaletestapp
+Metrics:                               ( current / target )
+  "http_requests_per_second" on pods:  0 / 10
+Min replicas:                          1
+Max replicas:                          10
+Deployment pods:                       7 current / 7 desired
+Conditions:
+  Type            Status  Reason               Message
+  ----            ------  ------               -------
+  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
+  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from pods metric http_requests_per_second
+  ScalingLimited  False   DesiredWithinRange   the desired count is within the acceptable range
+Events:
+  Type    Reason             Age    From                       Message
+  ----    ------             ----   ----                       -------
+  Normal  SuccessfulRescale  8m12s  horizontal-pod-autoscaler  New size: 2; reason: pods metric http_requests_per_second above target
+  Normal  SuccessfulRescale  7m57s  horizontal-pod-autoscaler  New size: 3; reason: pods metric http_requests_per_second above target
+  Normal  SuccessfulRescale  7m27s  horizontal-pod-autoscaler  New size: 5; reason: pods metric http_requests_per_second above target
+  Normal  SuccessfulRescale  6m57s  horizontal-pod-autoscaler  New size: 7; reason: pods metric http_requests_per_second above target

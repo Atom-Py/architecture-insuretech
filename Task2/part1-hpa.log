@@ -1,0 +1,80 @@
+# kubectl get hpa scaletestapp, раз в 15 с
+TIME      NAME          REFERENCE                TARGETS           MINPODS  MAXPODS  REPLICAS  AGE
+21:00:53  scaletestapp  Deployment/scaletestapp  memory: 47%/80%   1        10       1         12m
+21:01:08  scaletestapp  Deployment/scaletestapp  memory: 47%/80%   1        10       1         12m
+21:01:23  scaletestapp  Deployment/scaletestapp  memory: 47%/80%   1        10       1         12m
+21:01:38  scaletestapp  Deployment/scaletestapp  memory: 54%/80%   1        10       1         12m
+21:01:53  scaletestapp  Deployment/scaletestapp  memory: 54%/80%   1        10       1         13m
+21:02:08  scaletestapp  Deployment/scaletestapp  memory: 54%/80%   1        10       1         13m
+21:02:24  scaletestapp  Deployment/scaletestapp  memory: 113%/80%  1        10       1         13m
+21:02:39  scaletestapp  Deployment/scaletestapp  memory: 113%/80%  1        10       2         13m
+21:02:54  scaletestapp  Deployment/scaletestapp  memory: 113%/80%  1        10       2         14m
+21:03:09  scaletestapp  Deployment/scaletestapp  memory: 113%/80%  1        10       2         14m
+21:03:24  scaletestapp  Deployment/scaletestapp  memory: 115%/80%  1        10       2         14m
+21:03:39  scaletestapp  Deployment/scaletestapp  memory: 115%/80%  1        10       3         14m
+21:03:55  scaletestapp  Deployment/scaletestapp  memory: 115%/80%  1        10       3         15m
+21:04:10  scaletestapp  Deployment/scaletestapp  memory: 115%/80%  1        10       3         15m
+21:04:25  scaletestapp  Deployment/scaletestapp  memory: 95%/80%   1        10       3         15m
+21:04:40  scaletestapp  Deployment/scaletestapp  memory: 95%/80%   1        10       4         15m
+21:04:55  scaletestapp  Deployment/scaletestapp  memory: 95%/80%   1        10       4         16m
+21:05:10  scaletestapp  Deployment/scaletestapp  memory: 95%/80%   1        10       4         16m
+21:05:26  scaletestapp  Deployment/scaletestapp  memory: 90%/80%   1        10       4         16m
+21:05:41  scaletestapp  Deployment/scaletestapp  memory: 90%/80%   1        10       5         16m
+21:05:56  scaletestapp  Deployment/scaletestapp  memory: 90%/80%   1        10       5         17m
+21:06:11  scaletestapp  Deployment/scaletestapp  memory: 90%/80%   1        10       5         17m
+21:06:26  scaletestapp  Deployment/scaletestapp  memory: 81%/80%   1        10       5         17m
+21:06:41  scaletestapp  Deployment/scaletestapp  memory: 81%/80%   1        10       5         17m
+21:06:57  scaletestapp  Deployment/scaletestapp  memory: 81%/80%   1        10       5         18m
+21:07:12  scaletestapp  Deployment/scaletestapp  memory: 81%/80%   1        10       5         18m
+21:07:27  scaletestapp  Deployment/scaletestapp  memory: 79%/80%   1        10       5         18m
+21:07:42  scaletestapp  Deployment/scaletestapp  memory: 79%/80%   1        10       5         18m
+21:07:57  scaletestapp  Deployment/scaletestapp  memory: 79%/80%   1        10       5         19m
+21:08:12  scaletestapp  Deployment/scaletestapp  memory: 79%/80%   1        10       5         19m
+21:08:28  scaletestapp  Deployment/scaletestapp  memory: 79%/80%   1        10       5         19m
+21:08:43  scaletestapp  Deployment/scaletestapp  memory: 79%/80%   1        10       5         19m
+
+# kubectl get pods -l app=scaletestapp
+NAME                            READY   STATUS    RESTARTS   AGE
+scaletestapp-79975f4cf7-4cvnj   1/1     Running   0          4m42s
+scaletestapp-79975f4cf7-52lj9   1/1     Running   0          3m42s
+scaletestapp-79975f4cf7-hn9mj   1/1     Running   0          13m
+scaletestapp-79975f4cf7-mx2hx   1/1     Running   0          5m42s
+scaletestapp-79975f4cf7-zl6tt   1/1     Running   0          6m42s
+
+# kubectl top pod -l app=scaletestapp
+NAME                            CPU(cores)   MEMORY(bytes)   
+scaletestapp-79975f4cf7-4cvnj   1m           4Mi             
+scaletestapp-79975f4cf7-52lj9   1m           2Mi             
+scaletestapp-79975f4cf7-hn9mj   1m           17Mi            
+scaletestapp-79975f4cf7-mx2hx   1m           4Mi             
+scaletestapp-79975f4cf7-zl6tt   1m           10Mi            
+
+# kubectl describe hpa scaletestapp
+Name:                                                     scaletestapp
+Namespace:                                                default
+Labels:                                                   <none>
+Annotations:                                              <none>
+CreationTimestamp:                                        Sun, 01 Nov 2026 20:48:45 +0300
+Reference:                                                Deployment/scaletestapp
+Metrics:                                                  ( current / target )
+  resource memory on pods  (as a percentage of request):  79% (8132Ki) / 80%
+Min replicas:                                             1
+Max replicas:                                             10
+Deployment pods:                                          5 current / 5 desired
+Conditions:
+  Type            Status  Reason              Message
+  ----            ------  ------              -------
+  AbleToScale     True    ReadyForNewScale    recommended size matches current size
+  ScalingActive   True    ValidMetricFound    the HPA was able to successfully calculate a replica count from memory resource utilization (percentage of request)
+  ScalingLimited  False   DesiredWithinRange  the desired count is within the acceptable range
+Events:
+  Type     Reason                        Age                From                       Message
+  ----     ------                        ----               ----                       -------
+  Warning  FailedGetResourceMetric       19m (x2 over 19m)  horizontal-pod-autoscaler  failed to get memory utilization: unable to get metrics for resource memory: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  19m (x2 over 19m)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get memory resource metric value: failed to get memory utilization: unable to get metrics for resource memory: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       12m (x6 over 19m)  horizontal-pod-autoscaler  failed to get memory utilization: unable to get metrics for resource memory: no metrics returned from resource metrics API
+  Warning  FailedComputeMetricsReplicas  12m (x6 over 19m)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get memory resource metric value: failed to get memory utilization: unable to get metrics for resource memory: no metrics returned from resource metrics API
+  Normal   SuccessfulRescale             6m42s              horizontal-pod-autoscaler  New size: 2; reason: memory resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             5m42s              horizontal-pod-autoscaler  New size: 3; reason: memory resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             4m42s              horizontal-pod-autoscaler  New size: 4; reason: memory resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             3m42s              horizontal-pod-autoscaler  New size: 5; reason: memory resource utilization (percentage of request) above target

@@ -1,0 +1,67 @@
+# GraphQL-схема сервиса client-info, эквивалент REST API v1 (Swagger «Клиентский Сервис» 1.0.0)
+
+type Query {
+  """
+  Информация о клиенте по ID; null, если клиент не найден.
+  Покрывает GET /clients/{id}, GET /clients/{id}/documents и GET /clients/{id}/relatives:
+  потребитель выбирает нужные поля и связанные объекты в одном запросе.
+  """
+  client(
+    "ID клиента"
+    id: ID!
+  ): Client
+}
+
+"Клиент"
+type Client {
+  "ID клиента"
+  id: ID!
+  "Имя клиента"
+  name: String
+  "Возраст клиента"
+  age: Int
+  "Документы клиента, как в GET /clients/{id}/documents"
+  documents: [Document!]!
+  "Родственники клиента, как в GET /clients/{id}/relatives"
+  relatives: [Relative!]!
+}
+
+"Документ клиента"
+type Document {
+  "ID документа"
+  id: ID!
+  "Тип документа"
+  type: String
+  "Номер документа"
+  number: String
+  "Дата выдачи"
+  issueDate: String
+  "Дата окончания действия"
+  expiryDate: String
+}
+
+"Родственник клиента"
+type Relative {
+  "ID родственника"
+  id: ID!
+  "Степень родства"
+  relationType: String
+  "Имя родственника"
+  name: String
+  "Возраст родственника"
+  age: Int
+}
+
+# Соответствие операциям REST API
+#
+# GET /clients/{id}:
+#   query { client(id: "1") { id name age } }
+#
+# GET /clients/{id}/documents:
+#   query { client(id: "1") { documents { id type number issueDate expiryDate } } }
+#
+# GET /clients/{id}/relatives:
+#   query { client(id: "1") { relatives { id relationType name age } } }
+#
+# Данные из трёх ресурсов одним запросом, только нужные поля:
+#   query { client(id: "1") { name documents { type number } relatives { name relationType } } }
